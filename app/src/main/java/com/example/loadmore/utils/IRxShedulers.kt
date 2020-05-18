@@ -1,4 +1,8 @@
 package com.example.loadmore.utils
 
-class IRxShedulers {
+import io.reactivex.Scheduler
+
+interface IRxSchedulers {
+    fun main(): Scheduler
+    fun io(): Scheduler
 }

@@ -1,4 +1,61 @@
 package com.example.loadmore.utils
 
-class Utils {
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.example.loadmore.R
+import com.example.loadmore.apiKey
+import java.io.File
+import java.util.*
+
+class Utils constructor(private val context: Context) {
+    private var toast: Toast? = null
+
+
+    fun errorToast(msg: String) {
+        if (toast != null) {
+            toast?.cancel()
+        }
+        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG)
+        val view = toast?.view
+        view?.setBackgroundResource(R.color.colorAccent)
+        val text = view?.findViewById<View>(android.R.id.message) as TextView
+        text.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
+        text.setPadding(15, 5, 15, 5)
+        toast?.show()
+    }
+
+    fun successToast(msg: String) {
+        if (toast != null) {
+            toast?.cancel()
+        }
+        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG)
+        val view = toast?.view
+        view?.setBackgroundResource(R.color.colorPrimaryDark)
+        val text = view?.findViewById(android.R.id.message) as TextView
+        text.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
+        text.setPadding(15, 5, 15, 5)
+        toast?.show()
+    }
+
+    fun successToastWithBackgroundRed(msg: String) {
+        if (toast != null) {
+            toast?.cancel()
+        }
+        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG)
+        val view = toast?.view
+        view?.setBackgroundResource(R.color.colorPrimary)
+        val text = view?.findViewById(android.R.id.message) as TextView
+        text.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
+        text.setPadding(15, 5, 15, 5)
+        toast?.show()
+    }
 }

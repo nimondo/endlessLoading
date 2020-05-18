@@ -3,4 +3,7 @@
     <string name="linear_rv_activity">Load More - Linear RecyclerView</string>
     <string name="grid_rv_activity">Load More - Grid RecyclerView</string>
     <string name="staggered_rv_activity">Load More - Staggered RecyclerView</string>
+    <string name="network_failure">Network Failure!</string>
+    <string name="network_timeout">Connection Timeout!</string>
+    <string name="user_not_exit">Aucune information trouvée!</string>
 </resources>
