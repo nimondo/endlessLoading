@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.loadmore.DATABASE_NAME
 import com.example.loadmore.LoadMoreApplication
 import com.example.loadmore.data.local.AppDatabase
+import com.example.loadmore.data.local.dao.PostDao
 import com.example.loadmore.utils.IRxSchedulers
 import com.example.loadmore.utils.Utils
 import io.reactivex.Scheduler
@@ -26,6 +27,7 @@ val appModule = Kodein.Module(MODULE_NAME, false) {
     bind<Resources>() with singleton { instance<LoadMoreApplication>().resources }
     bind<IRxSchedulers>() with singleton { getIRxSchedulers() }
     bind<AppDatabase>() with singleton { providesAppDatabase(instance()) }
+    bind<PostDao>() with singleton { providesPostDao(instance()) }
 
 }
 
@@ -43,7 +45,7 @@ private fun providesAppDatabase(context: Context): AppDatabase =
         // .allowMainThreadQueries()
         .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
         .build()
-
+private fun providesPostDao(database: AppDatabase): PostDao = database.postDao()
 
 val MIGRATION_1_2: Migration = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {

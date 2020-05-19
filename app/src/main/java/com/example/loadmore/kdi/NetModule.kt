@@ -1,10 +1,12 @@
 package com.example.loadmore.kdi
 
 import android.content.Context
+import android.text.TextUtils
 import com.example.loadmore.BuildConfig
 import com.example.loadmore.KEY_APK
 import com.example.loadmore.data.remote.ApiService
 import com.example.loadmore.rEQUESTTIMEOUT
+import com.example.loadmore.utils.Utils
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient

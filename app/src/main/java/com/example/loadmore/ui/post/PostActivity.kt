@@ -1,25 +1,22 @@
-package com.example.loadmore.ui.main
+package com.example.loadmore.ui.post
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.os.Binder
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.loadmore.utils.Common.showSnackbarLong
-import com.example.loadmore.GridRecyclerView.GridRecyclerViewActivity
-import com.example.loadmore.LinearRecyclerView.LinearRecyclerViewActivity
 import com.example.loadmore.R
-import com.example.loadmore.StaggeredRecyclerView.StaggeredRecyclerViewActivity
 import com.example.loadmore.databinding.ActivityMainBinding
+import com.example.loadmore.databinding.ActivityPostBinding
 import com.example.loadmore.kdi.mainActivityModule
-import com.example.loadmore.ui.post.PostActivity
+import com.example.loadmore.kdi.postActivityModule
+import com.example.loadmore.ui.main.MainViewModel
 import com.example.loadmore.utils.Utils
 import com.example.loadmore.utils.listener.HttpErrorListener
-import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
@@ -28,47 +25,30 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 
-
-class MainActivity  : AppCompatActivity() , KodeinAware, HttpErrorListener {
+class PostActivity : AppCompatActivity() , KodeinAware, HttpErrorListener, PostListener {
     private val _parentKodein by closestKodein()
     override val kodein: Kodein by retainedKodein {
         extend(_parentKodein)
-        bind<Context>("ActivityContext") with singleton { this@MainActivity }
-        bind<Activity>() with singleton { this@MainActivity }
-        import(mainActivityModule)
+        bind<Context>("ActivityContext") with singleton { this@PostActivity }
+        bind<Activity>() with singleton { this@PostActivity }
+        import(postActivityModule)
     }
     private lateinit var loading: MaterialDialog
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityPostBinding
     private val viewModelFactory: ViewModelProvider.Factory by instance()
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: PostViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_post)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PostViewModel::class.java)
         binding.viewModel = viewModel
-        binding.linearRvBtn.setOnClickListener {
-            val intent = Intent(this,
-                PostActivity::class.java)
-                startActivity(intent)
-        }
-//        linear_rv_btn.setOnClickListener {
-//
-//        }
-
-        grid_rv_btn.setOnClickListener {
-            val intent = Intent(this,
-                GridRecyclerViewActivity::class.java)
-            startActivity(intent)
-        }
-
-        staggered_rv_btn.setOnClickListener {
-            val intent = Intent(this,
-                StaggeredRecyclerViewActivity::class.java)
-            startActivity(intent)
-        }
-
+        viewModel.postListener = this
+        viewModel.httpErrorListener= this
+        loading = Utils(this).showLoadingDialog()
+        val isConnect =  Utils(this).isConnectedToInternet()
+        viewModel.getAllArticles(isConnect)
     }
-
     override fun networkFailure() {
         this.hideLoading()
         Utils(this).errorToast(getString(R.string.network_failure))
@@ -100,6 +80,14 @@ class MainActivity  : AppCompatActivity() , KodeinAware, HttpErrorListener {
     override fun serverNotResponse(error: Int) {
         this.hideLoading()
         showSnackbarLong(error)
+    }
+
+    override fun emptyData() {
+        binding.noPostFound.visibility = View.VISIBLE
+    }
+
+    override fun hideEmptyData() {
+        binding.noPostFound.visibility = View.GONE
     }
 
 }

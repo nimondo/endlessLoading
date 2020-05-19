@@ -6,4 +6,6 @@
     <string name="network_failure">Network Failure!</string>
     <string name="network_timeout">Connection Timeout!</string>
     <string name="user_not_exit">Aucune information trouvée!</string>
+    <string name="no_article">Pas d\'articles!</string>
+    <string name="loading_label">loading...</string>
 </resources>

@@ -11,6 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.example.loadmore.R
 import com.example.loadmore.apiKey
 import java.io.File
@@ -57,5 +59,23 @@ class Utils constructor(private val context: Context) {
         text.setTextColor(ContextCompat.getColor(context, R.color.colorWhite))
         text.setPadding(15, 5, 15, 5)
         toast?.show()
+    }
+    fun isConnectedToInternet(): Boolean {
+        val cm =
+            context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val ni = cm.activeNetwork
+            val capabilities = cm.getNetworkCapabilities(ni)
+            capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_WIFI
+            ) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
+        } else {
+            val activeNetwork = cm.activeNetworkInfo
+            activeNetwork != null && activeNetwork.isConnected
+        }
+    }
+    fun showLoadingDialog(): MaterialDialog {
+        return MaterialDialog(context).customView(R.layout.loading_view).cancelOnTouchOutside(false)
+            .cornerRadius(16f)
     }
 }
