@@ -8,24 +8,22 @@ import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.*
 import com.example.loadmore.R
 import com.example.loadmore.BR
 import com.example.loadmore.Constant
+import com.example.loadmore.LinearRecyclerView.Items_LinearRVAdapter
 import com.example.loadmore.data.model.Post
 import com.example.loadmore.databinding.ItemPostListBinding
 import com.example.loadmore.databinding.ProgressLoadingBinding
 import kotlinx.android.synthetic.main.progress_loading.view.*
 
 class PostListAdapter(val viewModel: PostViewModel) :
-    Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<PostListAdapter.ViewHolder>() {
     private lateinit var postList: List<Post>
-    override fun getItemViewType(position: Int): Int {
-        return if (postList[position] == null) Constant.VIEW_TYPE_LOADING
-        else super.getItemViewType(position)
-    }
+    class LoadingViewHolder(itemView: ProgressLoadingBinding) : RecyclerView.ViewHolder(itemView.root)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -39,19 +37,19 @@ class PostListAdapter(val viewModel: PostViewModel) :
         return if (viewType == Constant.VIEW_TYPE_ITEM) {
             ViewHolder(binding)
         }else{
-            val progressingBinding:ProgressLoadingBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.progress_loading, parent,
-                false
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                progressingBinding.progressbar.indeterminateDrawable.colorFilter = BlendModeColorFilter(Color.WHITE, BlendMode.SRC_ATOP)
-            } else {
-                progressingBinding.progressbar.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
-            }
-            LoadingViewHolder(progressingBinding)
-            ViewHolder(progressingBinding)
-//            ViewHolder(binding)
+//            val progressingBinding:ProgressLoadingBinding = DataBindingUtil.inflate(
+//                LayoutInflater.from(parent.context),
+//                R.layout.progress_loading, parent,
+//                false
+//            )
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                progressingBinding.progressbar.indeterminateDrawable.colorFilter = BlendModeColorFilter(Color.WHITE, BlendMode.SRC_ATOP)
+//            } else {
+//                progressingBinding.progressbar.indeterminateDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
+//            }
+//            LoadingViewHolder(progressingBinding)
+//            ViewHolder(progressingBinding)
+            ViewHolder(binding)
         }
 //        return ViewHolder(binding)
     }
@@ -79,5 +77,4 @@ class PostListAdapter(val viewModel: PostViewModel) :
             binding.setVariable(BR.post, posts)
         }
     }
-    class LoadingViewHolder(itemView: ProgressLoadingBinding) : RecyclerView.ViewHolder(itemView.root)
 }
